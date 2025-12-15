@@ -8,18 +8,26 @@ public class PlayerControllerSimple : MonoBehaviour
 
     void Update()
     {
-        // Movimiento
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
 
-        Vector3 movimiento = transform.right * horizontal + transform.forward * vertical;
+        Vector3 forward = Camera.main.transform.forward;
+        Vector3 right = Camera.main.transform.right;
+        
+        forward.y = 0;
+        right.y = 0;
+
+       
+        forward.Normalize();
+        right.Normalize();
+       
+        Vector3 movimiento = forward * vertical + right * horizontal;
         transform.position += movimiento * velocidad * Time.deltaTime;
 
-        // Rotación con mouse
+        
         float mouseX = Input.GetAxis("Mouse X") * velocidadRotacion;
         transform.Rotate(0, mouseX, 0);
-
-        // Interacción con E
+        
         if (Input.GetKeyDown(KeyCode.E))
         {
             Interactuar();
