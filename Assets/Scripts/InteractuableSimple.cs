@@ -1,25 +1,24 @@
 using UnityEngine;
-using UnityEngine;
 
 public class InteractuableSimple : MonoBehaviour
 {
-    public float puntos = 10f; // Puntos que da al mundo
-    public bool esPositivo = true; // True = bueno, False = malo
+    public float puntos = 10f;
+    public bool esPositivo = true;
 
-    // Materiales para mostrar cambio
     public Material materialNormal;
     public Material materialUsado;
+    public Material materialHighlight;
 
     private bool usado = false;
     private Renderer rend;
+
+    public bool Usado => usado;
 
     void Start()
     {
         rend = GetComponent<Renderer>();
         if (rend != null && materialNormal != null)
-        {
             rend.material = materialNormal;
-        }
     }
 
     public void Usar()
@@ -28,21 +27,28 @@ public class InteractuableSimple : MonoBehaviour
 
         usado = true;
 
-        // Cambiar material
         if (rend != null && materialUsado != null)
-        {
             rend.material = materialUsado;
-        }
 
-        // Cambiar estado del mundo
         if (WorldManager.Instance != null)
         {
             float cantidad = esPositivo ? puntos : -puntos;
             WorldManager.Instance.CambiarEstado(cantidad);
         }
 
-        // Desactivar después de un tiempo
         Invoke("Desactivar", 2f);
+    }
+
+    public void Resaltar()
+    {
+        if (!usado && rend != null && materialHighlight != null)
+            rend.material = materialHighlight;
+    }
+
+    public void QuitarResaltar()
+    {
+        if (!usado && rend != null && materialNormal != null)
+            rend.material = materialNormal;
     }
 
     void Desactivar()
