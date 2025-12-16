@@ -36,7 +36,6 @@ public class InteractuableSimple : MonoBehaviour
             WorldManager.Instance.CambiarEstado(cantidad);
         }
 
-        Invoke("Desactivar", 2f);
     }
 
     public void Resaltar()
