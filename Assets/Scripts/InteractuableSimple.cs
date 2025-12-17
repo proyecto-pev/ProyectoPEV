@@ -32,7 +32,7 @@ public class InteractuableSimple : MonoBehaviour
 
         if (WorldManager.Instance != null)
         {
-            float cantidad = esPositivo ? puntos : -puntos;
+            float cantidad = esPositivo ? -puntos : puntos;
             WorldManager.Instance.CambiarEstado(cantidad);
         }
 

@@ -11,7 +11,7 @@ public class UIEstadoSimple : MonoBehaviour
         // Configurar slider
         if (sliderEstado != null)
         {
-            sliderEstado.minValue = -100;
+            sliderEstado.minValue = 0;
             sliderEstado.maxValue = 100;
         }
     }
