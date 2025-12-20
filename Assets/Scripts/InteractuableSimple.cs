@@ -2,9 +2,20 @@ using UnityEngine;
 
 public class InteractuableSimple : MonoBehaviour
 {
-    public float puntos = 10f;
-    public bool esPositivo = true;
+    // Tipos de efecto posibles
+    public enum TipoEfecto
+    {
+        Sumar,
+        Restar
+    }
 
+    [Header("Efecto")]
+    public TipoEfecto tipo = TipoEfecto.Sumar;
+
+    [Range(5, 15)]
+    public int puntos = 5;   // 5, 10 o 15 (configurable)
+
+    [Header("Materiales")]
     public Material materialNormal;
     public Material materialUsado;
     public Material materialHighlight;
@@ -32,10 +43,10 @@ public class InteractuableSimple : MonoBehaviour
 
         if (WorldManager.Instance != null)
         {
-            float cantidad = esPositivo ? -puntos : puntos;
-            WorldManager.Instance.CambiarEstado(cantidad);
+            // Si es Restar, los puntos se convierten en negativos
+            int valorFinal = (tipo == TipoEfecto.Sumar) ? puntos : -puntos;
+            WorldManager.Instance.CambiarEstado(valorFinal);
         }
-
     }
 
     public void Resaltar()
@@ -48,10 +59,5 @@ public class InteractuableSimple : MonoBehaviour
     {
         if (!usado && rend != null && materialNormal != null)
             rend.material = materialNormal;
-    }
-
-    void Desactivar()
-    {
-        gameObject.SetActive(false);
     }
 }
