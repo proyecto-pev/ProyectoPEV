@@ -1,8 +1,13 @@
 using UnityEngine;
+using System;
+
 public class WorldManager : MonoBehaviour
 {
     public float estadoGlobal = 0f;
     public static WorldManager Instance;
+
+    // EVENTO OBSERVER
+    public event Action<float> OnEstadoCambiado;
 
     void Awake()
     {
@@ -16,6 +21,9 @@ public class WorldManager : MonoBehaviour
     {
         estadoGlobal += cantidad;
         estadoGlobal = Mathf.Clamp(estadoGlobal, 0f, 100f);
+
+        // NOTIFICAR A LOS OBSERVERS
+        OnEstadoCambiado?.Invoke(estadoGlobal);
     }
 
     public float GetEstadoActual()
