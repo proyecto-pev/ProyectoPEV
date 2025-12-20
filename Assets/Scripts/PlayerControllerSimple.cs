@@ -8,8 +8,9 @@ public class PlayerControllerSimple : MonoBehaviour
     public float rotationSpeed = 10f;
 
     [Header("Interacción")]
-    public float rangoInteraccion = 3f;      // distancia frontal
-    public float radioInteraccion = 1.5f;    // ancho/alto de la zona de interacción
+    public float rangoHighlight = 3f;      // Distancia para resaltar
+    public float rangoInteraccion = 1.5f;  // Distancia real para usar
+    public float radioInteraccion = 1.5f;
 
     Transform cam;
     private InteractuableSimple objetoResaltado = null;
@@ -26,6 +27,7 @@ public class PlayerControllerSimple : MonoBehaviour
         Interactuar();
     }
 
+    // Movimiento relativo a la cámara
     void Mover()
     {
         float h = Input.GetAxis("Horizontal");
@@ -35,38 +37,37 @@ public class PlayerControllerSimple : MonoBehaviour
         Vector3 camRight = cam.right;
         camForward.y = 0;
         camRight.y = 0;
-        camForward.Normalize();
-        camRight.Normalize();
 
-        Vector3 moveDir = camForward * v + camRight * h;
+        Vector3 moveDir = camForward.normalized * v + camRight.normalized * h;
 
         if (moveDir.magnitude > 0.1f)
         {
             transform.position += moveDir * speed * Time.deltaTime;
-            Quaternion targetRot = Quaternion.LookRotation(moveDir);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, rotationSpeed * Time.deltaTime);
+            transform.rotation = Quaternion.Slerp(
+                transform.rotation,
+                Quaternion.LookRotation(moveDir),
+                rotationSpeed * Time.deltaTime
+            );
         }
     }
 
+    // Detecta objetos cercanos SOLO para resaltar
     void DetectarObjetosCercanos()
     {
-        Vector3 centro = transform.position + transform.forward * (rangoInteraccion / 2f) + Vector3.up * 1.5f;
-        Vector3 halfExtents = new Vector3(radioInteraccion, radioInteraccion, rangoInteraccion / 2f);
+        Vector3 centro = transform.position + transform.forward * (rangoHighlight / 2f) + Vector3.up * 1.5f;
+        Vector3 halfExtents = new Vector3(radioInteraccion, radioInteraccion, rangoHighlight / 2f);
 
-        // Detecta colliders en un box frontal
         Collider[] colliders = Physics.OverlapBox(centro, halfExtents);
 
-        // Filtrar solo objetos con tag "Interactuable" y no usados
-        var objetosInteractuables = colliders
+        var interactuables = colliders
             .Select(c => c.GetComponent<InteractuableSimple>())
             .Where(o => o != null && !o.Usado)
             .ToList();
 
-        // Elegir el más cercano a la cámara
         InteractuableSimple masCercano = null;
         float minDist = float.MaxValue;
 
-        foreach (var obj in objetosInteractuables)
+        foreach (var obj in interactuables)
         {
             float dist = Vector3.Distance(cam.position, obj.transform.position);
             if (dist < minDist)
@@ -76,14 +77,12 @@ public class PlayerControllerSimple : MonoBehaviour
             }
         }
 
-        // Quitar highlight del anterior
         if (objetoResaltado != null && objetoResaltado != masCercano)
         {
             objetoResaltado.QuitarResaltar();
             objetoResaltado = null;
         }
 
-        // Resaltar el nuevo
         if (masCercano != null && masCercano != objetoResaltado)
         {
             masCercano.Resaltar();
@@ -91,21 +90,32 @@ public class PlayerControllerSimple : MonoBehaviour
         }
     }
 
+    // Solo permite interactuar si está MUY cerca
     void Interactuar()
     {
         if (Input.GetKeyDown(KeyCode.E) && objetoResaltado != null)
         {
-            objetoResaltado.Usar();
-            Debug.Log("Interactuaste con: " + objetoResaltado.name);
+            float distancia = Vector3.Distance(transform.position, objetoResaltado.transform.position);
+
+            if (distancia <= rangoInteraccion)
+            {
+                objetoResaltado.Usar();
+                objetoResaltado = null;
+            }
         }
     }
 
-    // Para debug: dibuja la caja en la escena
+    // Gizmos para debug
     void OnDrawGizmosSelected()
     {
-        Gizmos.color = Color.green;
-        Vector3 centro = transform.position + transform.forward * (rangoInteraccion / 2f) + Vector3.up * 1.5f;
-        Vector3 halfExtents = new Vector3(radioInteraccion, radioInteraccion, rangoInteraccion / 2f);
-        Gizmos.DrawWireCube(centro, halfExtents * 2);
+        // Zona de highlight
+        Gizmos.color = Color.yellow;
+        Vector3 centroH = transform.position + transform.forward * (rangoHighlight / 2f) + Vector3.up * 1.5f;
+        Vector3 halfH = new Vector3(radioInteraccion, radioInteraccion, rangoHighlight / 2f);
+        Gizmos.DrawWireCube(centroH, halfH * 2);
+
+        // Zona real de interacción
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, rangoInteraccion);
     }
 }
