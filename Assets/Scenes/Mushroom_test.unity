@@ -348,6 +348,7 @@ GameObject:
   - component: {fileID: 19529290}
   - component: {fileID: 19529288}
   - component: {fileID: 19529289}
+  - component: {fileID: 19529291}
   m_Layer: 0
   m_Name: Rain
   m_TagString: Untagged
@@ -5173,6 +5174,26 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+--- !u!114 &19529291
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 19529287}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1132bae41067b6e4893437922f143172, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RainManager
+  intensidadMin: 5
+  intensidadMax: 100
+  velocidadMin: 5
+  velocidadMax: 25
+  "tama\xF1oMin": 0.1
+  "tama\xF1oMax": 0.5
+  umbralTormenta: 30
+  lluvia: {fileID: 0}
 --- !u!1001 &20920117
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6655,6 +6676,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RainManager
   intensidadMin: 0
   intensidadMax: 100
+  velocidadMin: 5
+  velocidadMax: 25
+  "tama\xF1oMin": 0.1
+  "tama\xF1oMax": 0.5
+  umbralTormenta: 30
   lluvia: {fileID: 19529288}
 --- !u!4 &161595395
 Transform:
@@ -7521,7 +7547,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CampFireManager
   fuego: {fileID: 2101816642}
   colorNeutro: {r: 0.9811321, g: 0.8054694, b: 0.54147387, a: 1}
-  colorDistopico: {r: 0, g: 0.15204045, b: 0.31132078, a: 1}
+  colorDistopico: {r: 0, g: 0, b: 0, a: 1}
   intensidadMin: 0
   intensidadMax: 100
 --- !u!1001 &265177363
@@ -12530,7 +12556,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skyboxBase: {fileID: 2100000, guid: 1cf6f4c6e6e0518419839d3f5448dd99, type: 2}
   colorUtopico: {r: 1, g: 1, b: 1, a: 1}
-  colorDistopico: {r: 0.349, g: 0.435, b: 0.165, a: 1}
+  colorDistopico: {r: 0.4245283, g: 0.4245283, b: 0.4245283, a: 1}
 --- !u!4 &792485639
 Transform:
   m_ObjectHideFlags: 0
@@ -20961,7 +20987,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CampFireManager
   fuego: {fileID: 1838144683}
   colorNeutro: {r: 0.9811321, g: 0.8054694, b: 0.54147387, a: 1}
-  colorDistopico: {r: 0, g: 0.15294118, b: 0.3137255, a: 1}
+  colorDistopico: {r: 0, g: 0, b: 0, a: 1}
   intensidadMin: 0
   intensidadMax: 100
 --- !u!1001 &1844853654
@@ -23048,6 +23074,10 @@ PrefabInstance:
     - target: {fileID: 501295248461903500, guid: d6a5e2c4aefa6804b8f7d2af9a9676b5, type: 3}
       propertyPath: m_Materials.Array.size
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 501295248461903503, guid: d6a5e2c4aefa6804b8f7d2af9a9676b5, type: 3}
+      propertyPath: playOnAwake
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 501295248943222296, guid: d6a5e2c4aefa6804b8f7d2af9a9676b5, type: 3}
       propertyPath: m_Name
