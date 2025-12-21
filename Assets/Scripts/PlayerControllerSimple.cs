@@ -8,9 +8,8 @@ public class PlayerControllerSimple : MonoBehaviour
     public float rotationSpeed = 10f;
 
     [Header("Interacción")]
-    public float rangoHighlight = 3f;      // Distancia para resaltar
-    public float rangoInteraccion = 1.5f;  // Distancia real para usar
-    public float radioInteraccion = 1.5f;
+    public float rangoHighlight = 2.5f;      // Distancia para resaltar
+    public float rangoInteraccion = 2f;    // Distancia real para usar
 
     Transform cam;
     private InteractuableSimple objetoResaltado = null;
@@ -54,10 +53,7 @@ public class PlayerControllerSimple : MonoBehaviour
     // Detecta objetos cercanos SOLO para resaltar
     void DetectarObjetosCercanos()
     {
-        Vector3 centro = transform.position + transform.forward * (rangoHighlight / 2f) + Vector3.up * 1.5f;
-        Vector3 halfExtents = new Vector3(radioInteraccion, radioInteraccion, rangoHighlight / 2f);
-
-        Collider[] colliders = Physics.OverlapBox(centro, halfExtents);
+        Collider[] colliders = Physics.OverlapSphere(transform.position, rangoHighlight);
 
         var interactuables = colliders
             .Select(c => c.GetComponent<InteractuableSimple>())
@@ -69,7 +65,7 @@ public class PlayerControllerSimple : MonoBehaviour
 
         foreach (var obj in interactuables)
         {
-            float dist = Vector3.Distance(cam.position, obj.transform.position);
+            float dist = Vector3.Distance(transform.position, obj.transform.position);
             if (dist < minDist)
             {
                 minDist = dist;
@@ -90,7 +86,7 @@ public class PlayerControllerSimple : MonoBehaviour
         }
     }
 
-    // Solo permite interactuar si está MUY cerca
+    // Permite interactuar con E si estás dentro del rango
     void Interactuar()
     {
         if (Input.GetKeyDown(KeyCode.E) && objetoResaltado != null)
@@ -110,9 +106,7 @@ public class PlayerControllerSimple : MonoBehaviour
     {
         // Zona de highlight
         Gizmos.color = Color.yellow;
-        Vector3 centroH = transform.position + transform.forward * (rangoHighlight / 2f) + Vector3.up * 1.5f;
-        Vector3 halfH = new Vector3(radioInteraccion, radioInteraccion, rangoHighlight / 2f);
-        Gizmos.DrawWireCube(centroH, halfH * 2);
+        Gizmos.DrawWireSphere(transform.position, rangoHighlight);
 
         // Zona real de interacción
         Gizmos.color = Color.red;

@@ -3,7 +3,8 @@ using UnityEngine;
 public class RainManager : MonoBehaviour
 {
     [Header("Configuración")]
-    public float umbralLluvia = 40f;
+    public float intensidadMin = 5f;    // Intensidad mínima siempre visible
+    public float intensidadMax = 100f;  // Intensidad máxima
 
     [Header("Sistema de lluvia")]
     public ParticleSystem lluvia;
@@ -12,30 +13,29 @@ public class RainManager : MonoBehaviour
     {
         if (WorldManager.Instance != null)
         {
-            WorldManager.Instance.OnEstadoCambiado += ComprobarLluvia;
-            ComprobarLluvia(WorldManager.Instance.GetEstadoActual());
+            WorldManager.Instance.OnEstadoCambiado += ActualizarLluvia;
+            ActualizarLluvia(WorldManager.Instance.GetEstadoActual());
         }
     }
 
-    void ComprobarLluvia(float estado)
+    void ActualizarLluvia(float estado)
     {
         if (lluvia == null) return;
 
-        if (estado >= umbralLluvia)
-        {
-            if (!lluvia.isPlaying)
-                lluvia.Play();
-        }
-        else
-        {
-            if (lluvia.isPlaying)
-                lluvia.Stop();
-        }
+        var emission = lluvia.emission;
+
+        // Calculamos intensidad de manera progresiva
+        float t = estado / 100f;
+        emission.rateOverTime = Mathf.Lerp(intensidadMin, intensidadMax, t);
+
+        // Forzamos que siempre se reproduzca si intensidad > 0
+        if (emission.rateOverTime.constant > 0f && !lluvia.isPlaying)
+            lluvia.Play();
     }
 
     void OnDestroy()
     {
         if (WorldManager.Instance != null)
-            WorldManager.Instance.OnEstadoCambiado -= ComprobarLluvia;
+            WorldManager.Instance.OnEstadoCambiado -= ActualizarLluvia;
     }
 }
