@@ -13,8 +13,8 @@ public class LightManager : MonoBehaviour
     public float intensidadDistopica = 0.4f;
 
     [Header("Umbral distopía")]
-    public float inicioDistopia = 30f;
-    public float finDistopia = 80f;
+    public float inicioDistopia = 3f;
+    public float finDistopia = 8f;
 
     void Start()
     {

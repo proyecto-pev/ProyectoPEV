@@ -12,8 +12,8 @@ public class InteractuableSimple : MonoBehaviour
     [Header("Efecto")]
     public TipoEfecto tipo = TipoEfecto.Sumar;
 
-    [Range(5, 15)]
-    public int puntos = 5;   // 5, 10 o 15 (configurable)
+    [Range(1, 5)]
+    public int puntos = 1;   // 5, 10 o 15 (configurable)
 
     [Header("Materiales")]
     public Material materialNormal;

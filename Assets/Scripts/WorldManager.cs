@@ -20,7 +20,7 @@ public class WorldManager : MonoBehaviour
     public void CambiarEstado(float cantidad)
     {
         estadoGlobal += cantidad;
-        estadoGlobal = Mathf.Clamp(estadoGlobal, 0f, 100f);
+        estadoGlobal = Mathf.Clamp(estadoGlobal, 0f, 10f);
 
         // NOTIFICAR A LOS OBSERVERS
         OnEstadoCambiado?.Invoke(estadoGlobal);

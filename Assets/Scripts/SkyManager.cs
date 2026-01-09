@@ -3,7 +3,7 @@ using UnityEngine;
 public class SkyManager : MonoBehaviour
 {
     [Header("Configuración")]
-    public float umbralDistopia = 20f;
+    public float umbralDistopia = 2f;
     public float velocidadCambio = 1f;
 
     [Header("Multiplicadores de color")]

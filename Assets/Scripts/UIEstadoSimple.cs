@@ -11,10 +11,10 @@ public class UIEstadoSimple : MonoBehaviour
         if (sliderEstado != null)
         {
             sliderEstado.minValue = 0;
-            sliderEstado.maxValue = 100;
+            sliderEstado.maxValue = 10;
         }
 
-        // SUSCRIPCIÓN AL OBSERVER
+        // SUSCRIPCIï¿½N AL OBSERVER
         if (WorldManager.Instance != null)
         {
             WorldManager.Instance.OnEstadoCambiado += ActualizarUI;
@@ -35,7 +35,7 @@ public class UIEstadoSimple : MonoBehaviour
 
     void OnDestroy()
     {
-        // DESUSCRIPCIÓN (muy importante)
+        // DESUSCRIPCIï¿½N (muy importante)
         if (WorldManager.Instance != null)
             WorldManager.Instance.OnEstadoCambiado -= ActualizarUI;
     }

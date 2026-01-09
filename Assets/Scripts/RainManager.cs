@@ -9,7 +9,7 @@ public class RainManager : MonoBehaviour
     public float velocidadMax = 80f;      // Velocidad máxima en tormenta
     public float tamañoMin = 0.1f;        // Tamaño mínimo
     public float tamañoMax = 0.6f;        // Tamaño máximo en tormenta
-    public float umbralTormenta = 30f;    // Estado a partir del cual es tormenta
+    public float umbralTormenta = 3f;    // Estado a partir del cual es tormenta
 
     [Header("Sistema de lluvia")]
     public ParticleSystem lluvia;
