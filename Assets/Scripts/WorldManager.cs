@@ -6,8 +6,9 @@ public class WorldManager : MonoBehaviour
     public float estadoGlobal = 0f;
     public static WorldManager Instance;
 
-    // EVENTO OBSERVER
+    // EVENTOS OBSERVER
     public event Action<float> OnEstadoCambiado;
+    public event Action<int> OnObjetoNegativoInteractuado; // Nuevo evento para objetos negativos
 
     void Awake()
     {
@@ -22,8 +23,14 @@ public class WorldManager : MonoBehaviour
         estadoGlobal += cantidad;
         estadoGlobal = Mathf.Clamp(estadoGlobal, 0f, 10f);
 
-        // NOTIFICAR A LOS OBSERVERS
+        // NOTIFICAR A LOS OBSERVADORES
         OnEstadoCambiado?.Invoke(estadoGlobal);
+
+        // Si es positivo (interacción con objeto negativo), disparar evento adicional
+        if (cantidad > 0)
+        {
+            OnObjetoNegativoInteractuado?.Invoke((int)cantidad);
+        }
     }
 
     public float GetEstadoActual()

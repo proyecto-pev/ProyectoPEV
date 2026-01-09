@@ -8,15 +8,25 @@ public class PlayerControllerSimple : MonoBehaviour
     public float rotationSpeed = 10f;
 
     [Header("Interacción")]
-    public float rangoHighlight = 2.5f;      // Distancia para resaltar
-    public float rangoInteraccion = 2f;    // Distancia real para usar
+    public float rangoHighlight = 2.5f;
+    public float rangoInteraccion = 2f;
+
+    [Header("Feedback")]
+    public AudioClip sonidoInteraccionPositiva;
+    public AudioClip sonidoInteraccionNegativa;
 
     Transform cam;
     private InteractuableSimple objetoResaltado = null;
+    private AudioSource audioSource;
 
     void Start()
     {
         cam = Camera.main.transform;
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+        }
     }
 
     void Update()
@@ -26,7 +36,6 @@ public class PlayerControllerSimple : MonoBehaviour
         Interactuar();
     }
 
-    // Movimiento relativo a la cámara
     void Mover()
     {
         float h = Input.GetAxis("Horizontal");
@@ -50,7 +59,6 @@ public class PlayerControllerSimple : MonoBehaviour
         }
     }
 
-    // Detecta objetos cercanos SOLO para resaltar
     void DetectarObjetosCercanos()
     {
         Collider[] colliders = Physics.OverlapSphere(transform.position, rangoHighlight);
@@ -86,7 +94,6 @@ public class PlayerControllerSimple : MonoBehaviour
         }
     }
 
-    // Permite interactuar con E si estás dentro del rango
     void Interactuar()
     {
         if (Input.GetKeyDown(KeyCode.E) && objetoResaltado != null)
@@ -95,20 +102,42 @@ public class PlayerControllerSimple : MonoBehaviour
 
             if (distancia <= rangoInteraccion)
             {
+                // Reproducir sonido según tipo de objeto
+                if (audioSource != null)
+                {
+                    AudioClip clip = objetoResaltado.esNegativo ?
+                        sonidoInteraccionNegativa : sonidoInteraccionPositiva;
+
+                    if (clip != null)
+                    {
+                        audioSource.PlayOneShot(clip);
+                    }
+                }
+
                 objetoResaltado.Usar();
+
+                // Opcional: feedback visual
+                StartCoroutine(FeedbackInteraccion());
+
                 objetoResaltado = null;
             }
         }
     }
 
-    // Gizmos para debug
+    System.Collections.IEnumerator FeedbackInteraccion()
+    {
+        // Pequeño feedback de movimiento
+        Vector3 originalPos = transform.position;
+        transform.position += Vector3.up * 0.1f;
+        yield return new WaitForSeconds(0.1f);
+        transform.position = originalPos;
+    }
+
     void OnDrawGizmosSelected()
     {
-        // Zona de highlight
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, rangoHighlight);
 
-        // Zona real de interacción
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, rangoInteraccion);
     }

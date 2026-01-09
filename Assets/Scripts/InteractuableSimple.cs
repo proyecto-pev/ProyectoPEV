@@ -2,62 +2,87 @@ using UnityEngine;
 
 public class InteractuableSimple : MonoBehaviour
 {
-    // Tipos de efecto posibles
-    public enum TipoEfecto
-    {
-        Sumar,
-        Restar
-    }
+    [Header("Configuración")]
+    public bool esNegativo = true; // True = objeto negativo, False = positivo
+    public float puntos = 1f; // Puntos que suma/resta
+    public bool Usado { get; private set; } = false;
 
-    [Header("Efecto")]
-    public TipoEfecto tipo = TipoEfecto.Sumar;
-
-    [Range(1, 5)]
-    public int puntos = 1;   // 5, 10 o 15 (configurable)
-
-    [Header("Materiales")]
-    public Material materialNormal;
-    public Material materialUsado;
-    public Material materialHighlight;
-
-    private bool usado = false;
-    private Renderer rend;
-
-    public bool Usado => usado;
+    [Header("Outline")]
+    public Outline outlineComponent;
+    private Color colorOriginal;
 
     void Start()
     {
-        rend = GetComponent<Renderer>();
-        if (rend != null && materialNormal != null)
-            rend.material = materialNormal;
+        // Buscar componente Outline si no está asignado
+        if (outlineComponent == null)
+        {
+            outlineComponent = GetComponent<Outline>();
+            if (outlineComponent == null)
+            {
+                outlineComponent = GetComponentInChildren<Outline>();
+            }
+        }
+
+        // Desactivar outline al inicio
+        if (outlineComponent != null)
+        {
+            outlineComponent.enabled = false;
+        }
+
+        // Establecer color inicial
+        colorOriginal = esNegativo ? Color.red : Color.green;
     }
 
-    public void Usar()
+    // Llamado cuando el jugador está cerca
+    public void Resaltar()
     {
-        if (usado) return;
-
-        usado = true;
-
-        if (rend != null && materialUsado != null)
-            rend.material = materialUsado;
-
-        if (WorldManager.Instance != null)
+        if (outlineComponent != null && !Usado)
         {
-            // Si es Restar, los puntos se convierten en negativos
-            int valorFinal = (tipo == TipoEfecto.Sumar) ? puntos : -puntos;
-            WorldManager.Instance.CambiarEstado(valorFinal);
+            outlineComponent.enabled = true;
+
+            // Asignar color según tipo de objeto
+            outlineComponent.OutlineColor = esNegativo ? Color.red : Color.green;
+            outlineComponent.OutlineWidth = 3f; // Ancho del outline
         }
     }
 
-    public void Resaltar()
-    {
-        if (!usado && rend != null && materialHighlight != null)
-            rend.material = materialHighlight;
-    }
-
+    // Llamado cuando el jugador se aleja
     public void QuitarResaltar()
     {
-        if (!usado && rend != null && materialNormal != null)
-            rend.material = materialNormal;
+        if (outlineComponent != null)
+        {
+            outlineComponent.enabled = false;
+        }
+    }
+
+    // Llamado al interactuar (presionar E)
+    public void Usar()
+    {
+        if (Usado) return;
+
+        Usado = true;
+
+        // Aplicar efecto visual de usado
+        if (outlineComponent != null)
+        {
+            outlineComponent.OutlineColor = Color.gray;
+            outlineComponent.OutlineWidth = 1f;
+        }
+
+        // Desactivar collider para evitar múltiples interacciones
+        Collider collider = GetComponent<Collider>();
+        if (collider != null)
+        {
+            collider.enabled = false;
+        }
+
+        // Modificar el estado global
+        float cantidad = esNegativo ? puntos : -puntos;
+        if (WorldManager.Instance != null)
+        {
+            WorldManager.Instance.CambiarEstado(cantidad);
+        }
+
+        Debug.Log($"Interactuado con {(esNegativo ? "negativo" : "positivo")}: {cantidad} puntos");
     }
 }
