@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class InteractuableSimple : MonoBehaviour
 {
-    [Header("Configuración")]
+    [Header("Configuraciï¿½n")]
     public bool esNegativo = true; // True = objeto negativo, False = positivo
     public float puntos = 1f; // Puntos que suma/resta
     public bool Usado { get; private set; } = false;
@@ -13,7 +13,7 @@ public class InteractuableSimple : MonoBehaviour
 
     void Start()
     {
-        // Buscar componente Outline si no está asignado
+        // Buscar componente Outline si no estï¿½ asignado
         if (outlineComponent == null)
         {
             outlineComponent = GetComponent<Outline>();
@@ -33,14 +33,14 @@ public class InteractuableSimple : MonoBehaviour
         colorOriginal = esNegativo ? Color.red : Color.green;
     }
 
-    // Llamado cuando el jugador está cerca
+    // Llamado cuando el jugador estï¿½ cerca
     public void Resaltar()
     {
         if (outlineComponent != null && !Usado)
         {
             outlineComponent.enabled = true;
 
-            // Asignar color según tipo de objeto
+            // Asignar color segï¿½n tipo de objeto
             outlineComponent.OutlineColor = esNegativo ? Color.red : Color.green;
             outlineComponent.OutlineWidth = 3f; // Ancho del outline
         }
@@ -69,12 +69,15 @@ public class InteractuableSimple : MonoBehaviour
             outlineComponent.OutlineWidth = 1f;
         }
 
-        // Desactivar collider para evitar múltiples interacciones
+        // Desactivar collider para evitar mï¿½ltiples interacciones
         Collider collider = GetComponent<Collider>();
         if (collider != null)
         {
             collider.enabled = false;
         }
+        // Llamar al teletransportable llamado "objtp"
+        GameObject objtp = GameObject.Find("objtp");
+        objtp?.GetComponent<TeleportObject>()?.Teletransportar();
 
         // Modificar el estado global
         float cantidad = esNegativo ? puntos : -puntos;
