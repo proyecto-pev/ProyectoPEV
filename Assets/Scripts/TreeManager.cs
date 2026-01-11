@@ -1,14 +1,16 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class TreeManager : MonoBehaviour
+public class TreeGrowManager : MonoBehaviour
 {
     public string tagArbol = "Arbol";
 
-    public float inicioMarchitamiento = 3f;
-    public float estadoDesaparecer = 8f;
+    [Header("Estado")]
+    public float inicioCrecimiento = 3f;
+    public float estadoMaximo = 10f;
 
-    public Vector3 escalaMinima = new Vector3(0.1f, 0.1f, 0.1f);
+    [Header("Escalado")]
+    public Vector3 escalaMaxima = new Vector3(2f, 2f, 2f);
 
     Dictionary<Transform, Vector3> arboles = new Dictionary<Transform, Vector3>();
 
@@ -31,22 +33,14 @@ public class TreeManager : MonoBehaviour
             Transform t = arbol.Key;
             Vector3 escalaInicial = arbol.Value;
 
-            if (estado >= estadoDesaparecer)
-            {
-                t.gameObject.SetActive(false);
-                continue;
-            }
-
-            t.gameObject.SetActive(true);
-
-            if (estado <= inicioMarchitamiento)
+            if (estado <= inicioCrecimiento)
             {
                 t.localScale = escalaInicial;
             }
             else
             {
-                float t01 = Mathf.InverseLerp(inicioMarchitamiento, estadoDesaparecer, estado);
-                t.localScale = Vector3.Lerp(escalaInicial, escalaMinima, t01);
+                float t01 = Mathf.InverseLerp(inicioCrecimiento, estadoMaximo, estado);
+                t.localScale = Vector3.Lerp(escalaInicial, escalaMaxima, t01);
             }
         }
     }
