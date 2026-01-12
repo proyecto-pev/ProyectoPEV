@@ -47081,8 +47081,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 461d5d4542dd96247a7bf9ad7fc2b5e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AmbientSoundManager
-  volumenMin: 0.2
-  volumenMax: 1
+  volumenMin: 0.1
+  volumenMax: 0.5
   clipAmbiental: {fileID: 8300000, guid: 0ad591428b0c18c4da51fe3bf98dbc63, type: 3}
   minEstado: 0
   maxEstado: 10
@@ -47102,7 +47102,7 @@ AudioSource:
   m_Volume: 0.73
   m_Pitch: 1
   Loop: 1
-  Mute: 1
+  Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
   Priority: 128
