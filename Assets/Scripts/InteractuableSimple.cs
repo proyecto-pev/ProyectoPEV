@@ -87,5 +87,7 @@ public class InteractuableSimple : MonoBehaviour
         }
 
         Debug.Log($"Interactuado con {(esNegativo ? "negativo" : "positivo")}: {cantidad} puntos");
+        Destroy(gameObject, 0.5f);
+
     }
 }
