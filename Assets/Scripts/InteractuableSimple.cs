@@ -75,9 +75,8 @@ public class InteractuableSimple : MonoBehaviour
         {
             collider.enabled = false;
         }
-        // Llamar al teletransportable llamado "objtp"
-        GameObject objtp = GameObject.Find("objtp");
-        objtp?.GetComponent<TeleportObject>()?.Teletransportar();
+        // Llamar al teletransporte de todos los objetos con tag "Teletransportable"
+        FindObjectOfType<TeleportObject>()?.TeletransportarTodos();
 
         // Modificar el estado global
         float cantidad = esNegativo ? puntos : -puntos;
